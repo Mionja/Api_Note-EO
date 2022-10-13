@@ -49,4 +49,9 @@ class AuthsController extends Controller
             'message' => 'logged out'
         ];
     }
+
+    public function test(Request $request)
+    {
+        return 'teest';
+    }
 }

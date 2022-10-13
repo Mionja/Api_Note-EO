@@ -12,6 +12,7 @@ use App\Http\Controllers\DownloadsController;
 Route::middleware(['cors'])->group(function () 
 {
     Route::post('/login', [AuthsController::class, 'login']);
+    Route::post('/test', [AuthsController::class, 'test']);
 
     //Route to all CRUD
     Route::apiresource('teacher', TeachersController::class);

@@ -27,31 +27,32 @@ class MarksController extends Controller
      */
     public function store(Request $request)
     {
-        return('test');
         // Excel::import(new UsersImport, request()->file('file'));
-        Excel::import(new TestsImport, request()->file('file'));
+        // Excel::import(new TestsImport, request()->file('file'));
 
-        // $request->validate([
-        //     // 'score' =>'required'    , 
-        //     'module' => 'required'     ,
-        //     'email' => 'required'      ,
-        //     'semester' => 'required'   ,
-        // ]);
-        // $module = Module::all()->where('code', $request->module)->first();
-        // $student = Student::all()->where('email', $request->email)->first();
+        $request->validate([
+            // 'score' =>'required'    , 
+            'module' => 'required'     ,
+            'email' => 'required'      ,
+            'semester' => 'required'   ,
+            'year' => 'required'       ,
+        ]);
+        $module = Module::all()->where('code', $request->module)->first();
+        $student = Student::all()->where('email', $request->email)->first();
        
-        // if ($request->score < 10) {
-        //     return Mark::create([
-        //         "module_id"=>$module['id']      ,
-        //         "student_id"=>$student['id']    ,
-        //         "semester"=>$request->semester  ,
-        //         "score"=>$request->score        ,
-        //         "retake_exam"=>1                ,
-        //     ]);
+        if ($request->score < 10) {
+            return Mark::create([
+                "module_id"=>$module['id']      ,
+                "student_id"=>$student['id']    ,
+                "semester"=>$request->semester  ,
+                "year"=>$request->year          ,
+                "score"=>$request->score        ,
+                "retake_exam"=>1                ,
+            ]);
     
-        // }
+        }
 
-        // return Mark::create([$request->all()]);
+        return Mark::create([$request->all()]);
 
     }
 
@@ -206,7 +207,7 @@ class MarksController extends Controller
                     $retake_module .= ", ". $mark['marks']['module']['code'];
                 }
             }
-           
+           dd($student);
             $s[] = [
                 'data'=>['student'=>$student->student, 
                         'average_point'=>$average_point,
