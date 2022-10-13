@@ -234,8 +234,20 @@ class MarksController extends Controller
            
             $sum_ap_all_students += $student['data']['average_point'];
         }
-        $average_point = $sum_ap_all_students / $number_students;
-        return  $average_point;
+
+        if ($number_students) {
+            $average_point = $sum_ap_all_students / $number_students;    
+            return  [
+                'status'=>200,
+                'moyenne'=>$average_point,
+                'nombre_etudiant'=>$number_students,
+                ]  ;
+        }
+        
+        else{
+            return  [
+                'status'=>400];
+        }
     }
 
     //list of all general average points in a year
