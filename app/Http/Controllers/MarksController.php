@@ -175,7 +175,10 @@ class MarksController extends Controller
             return ['message'=> "Fail"];
         }
         $average_point = $sum_score / $module_number;
-        return $average_point;
+        return [
+            'message'=> 'success',
+            'data'=>$average_point
+        ];
     }
 
  /**
