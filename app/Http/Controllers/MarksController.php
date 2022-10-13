@@ -153,15 +153,15 @@ class MarksController extends Controller
     /**
      * Get the average point of a student in a certain grade of a certain year
      * 
-     * @param  String  $grade
      * @param  int  $year
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function get_average_point_of_student_by_grade(String $grade, int $year, int $id)
+    public function get_average_point_of_student_by_grade( int $year, int $id)
     {
+       $grade = Grade::all()->where('student_id', $id)->where('school_year', $year)->first();
        $all_marks = $this->get_all_marks_by_year($year, $id);
-       $module_number = $this->list_module_by_grade($grade)['module_number'];
+       $module_number = $this->list_module_by_grade($grade->name)['module_number'];
         $sum_score = 0;
         $i = 0;
         foreach ($all_marks as $mark) 
@@ -235,6 +235,7 @@ class MarksController extends Controller
         return  $average_point;
     }
 
+    //list of all general average points in a year
     public function get_general_average_point(String $grade)
     {
         $g = Grade::all()->where('name', $grade);
