@@ -7,6 +7,7 @@ use App\Models\Grade;
 use App\Models\Module;
 use App\Models\Student;
 use App\Imports\UsersImport;
+use App\Imports\TestsImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -15,7 +16,7 @@ class MarksController extends Controller
 {
     public function index()
     {
-        return view('testImport');
+        return view('test');
     }
 
      /**
@@ -26,7 +27,9 @@ class MarksController extends Controller
      */
     public function store(Request $request)
     {
-        Excel::import(new UsersImport, request()->file('file'));
+        return('test');
+        // Excel::import(new UsersImport, request()->file('file'));
+        Excel::import(new TestsImport, request()->file('file'));
 
         // $request->validate([
         //     // 'score' =>'required'    , 

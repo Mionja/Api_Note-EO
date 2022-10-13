@@ -14,5 +14,6 @@ use App\Http\Controllers\MarksController;
 |
 */
 
-Route::get('/', [MarksController::class, 'index']);
-Route::post('mark', [MarksController::class, 'store'])->name('mark.store');
+Route::get('/', function(){
+    return 'Hello World';
+});
