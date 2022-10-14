@@ -27,6 +27,12 @@ class MarksController extends Controller
      */
     public function store(Request $request)
     {
+        // if ($request->file) {
+        //     return('file sent');
+        // }
+        // else{
+        //     return('file not sent');
+        // }
         // Excel::import(new UsersImport, request()->file('file'));
         // Excel::import(new TestsImport, request()->file('file'));
 
@@ -194,12 +200,13 @@ class MarksController extends Controller
      */
     public function get_average_point_of_all_students_by_grade(String $grade, int $year)
     {
+        
         $students = Grade::all()->where('name', $grade)->where('school_year', $year)->where('quit', 0);
         $s = [];
         $retake_module = "";
         foreach ($students as $student) 
         {
-            $average_point = $this->get_average_point_of_student_by_grade($grade, $year,  $student->student_id);
+            $average_point = $this->get_average_point_of_student_by_grade( $year,  $student->student_id);
             $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
             foreach ($all_marks as $mark) 
             {
@@ -207,7 +214,6 @@ class MarksController extends Controller
                     $retake_module .= ", ". $mark['marks']['module']['code'];
                 }
             }
-           dd($student);
             $s[] = [
                 'data'=>['student'=>$student->student, 
                         'average_point'=>$average_point,

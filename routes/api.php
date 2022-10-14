@@ -11,7 +11,7 @@ use App\Http\Controllers\DownloadsController;
 
 Route::middleware(['cors'])->group(function () 
 {
-    Route::post('/login', [AuthsController::class, 'login']);
+    Route::get('/login/{email}/{password}', [AuthsController::class, 'login']);
     Route::post('/test', [AuthsController::class, 'test']);
 
     //Route to all CRUD
@@ -31,12 +31,13 @@ Route::middleware(['cors'])->group(function ()
     Route::get('student/list/{grade}/{group}/{gender}/{school_year}',      [ServicesController::class, 'get_student_by_grade_and_gender']);        
     Route::post('student/list/quit',          [ServicesController::class, 'get_student_quitting']);      
     Route::post('student/list/retaking_exam', [ServicesController::class, 'get_student_retaking_exam']);        
+    Route::get('student/re-take-exam/{id}',                     [ServicesController::class, 'get_all_retake_exam']);
 
     //Route to informations about marks of student(s)
     Route::post('mark',                                         [MarksController::class, 'store']);
     Route::get('student/all-marks/{year}/{id}',                     [MarksController::class, 'get_all_marks_by_year']);
     Route::get('student/average_point/{year}/{id}',     [MarksController::class, 'get_average_point_of_student_by_grade']); 
-    Route::get('student/average_point/{grade}/{year}',          [MarksController::class, 'get_average_point_of_all_students_by_grade']);     
+    Route::get('student/average-point/{grade}/{year}',          [MarksController::class, 'get_average_point_of_all_students_by_grade']);     
     Route::get('student/general/average_point/{grade}/{year}',          [MarksController::class, 'get_general_average_point_of_all_students_by_grade']);     
     Route::get('student/general-average-point/{grade}',          [MarksController::class, 'get_general_average_point']);     
     Route::get('student/average_point/{gender}/{grade}/{year}', [MarksController::class, 'get_average_point_of_students_by_gender']);     

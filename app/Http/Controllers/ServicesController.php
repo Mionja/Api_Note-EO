@@ -300,7 +300,7 @@ class ServicesController extends Controller
                 if ($mark->student_id == $grade->student_id) 
                 {
                     $students[] = [
-                        'student_id'=> $grade->student_id    ,
+                        'student_id'=> $grade->student   ,
                         'mark'=> ['score'=>$mark->score      , 
                                   'semester'=>$mark->semester, 
                                   'module'=>$mark->module
@@ -312,5 +312,20 @@ class ServicesController extends Controller
 
         return $students;
 
+    }
+   
+    public function get_all_retake_exam(int $id)
+    {
+        $marks = Mark::all()->where('student_id', $id);
+        $retake_exam = [];
+        foreach ($marks as $mark) {
+            $module = $mark->module;
+            if ($mark['retake_exam'] == 1 ||$mark['retake_exam'] == 3) {
+                $retake_exam[] = [
+                    'retake_exam'=>$mark,
+                ];
+            }   
+        }
+        return $retake_exam;
     }
 }

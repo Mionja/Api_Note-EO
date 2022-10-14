@@ -2,32 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Student;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash; 
 
 class AuthsController extends Controller
 {
-    public function login(Request $request)
+    public function login(string $email, string $password)
     {
-        $fields = $request->validate([
-            'email'=>'required|string',
-            'password'=>'required|string',
-        ]);
 
         //Check email
-        $user = User::where('email',$fields['email'])->first();
+        $user = User::where('email',$email)->first();
+        $student_id = Student::where('email',$email)->first();
 
         //Check password
         if (!$user) { 
             return [
-                'message'=> 'Bad email'
+                'message'=> 'Wrong email'
             ];
         }
-        elseif (!Hash::check($fields['password'], $user->password)) {
+        elseif (!Hash::check($password, $user->password)) {
             return [
-                'message'=> 'Bad password'
+                'message'=> 'Wrong password'
             ];
         }
 
@@ -35,6 +33,7 @@ class AuthsController extends Controller
 
         $response = [
             'user'=> $user['name'],
+            'student_id'=> $student_id['id'],
             'token'=> $token,
         ];
 
