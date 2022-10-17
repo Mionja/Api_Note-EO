@@ -267,42 +267,23 @@ class ServicesController extends Controller
     /**
      * Get list of students who are retaking the exam
      *
-     * @param  string  $grade
      * @param  int  $school_year
      * @param  int  $module
      * @return \Illuminate\Http\Response
      */
-    public function get_student_retaking_exam(string $grade, int $school_year, int $module)
+    public function get_student_retaking_exam(int $school_year, int $module)
     {
-        return $grade;
-        die();
-        $grades = Grade::all()->where('name', $grade)
-                              ->where('school_year', $school_year);
-        
-        $marks = Mark::all()->where('retake_exam', 1)->where('year', $school_year);
-        
-        $students = [];
-        foreach ($grades as $grade) 
-        {
-            foreach ($marks as $mark) 
-            {
-                if ($mark->student_id == $grade->student_id) 
-                {
-                    $students[] = [
-                        'student'=> $grade->student          ,
-                        'mark'=> ['score'=>$mark->score      , 
-                                  'semester'=>$mark->semester, 
-                                  'module'=>$mark->module
-                                  ]
-                    ];
-                }
-            }
+        $marks = Mark::all()->where('retake_exam', 1)->where('year', $school_year)->where('module_id', $module);
+        $student = [];
+        foreach ($marks as $mark) {
+            $s=$mark->students;
+            $student []= [
+                'marks'=>$mark
+            ];
         }
-
-        return $students;
-
+        return $student;
     }
-   
+
     public function get_all_retake_exam(int $id)
     {
         $marks = Mark::all()->where('student_id', $id);

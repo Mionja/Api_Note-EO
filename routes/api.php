@@ -12,7 +12,6 @@ use App\Http\Controllers\DownloadsController;
 Route::middleware(['cors'])->group(function () 
 {
     Route::get('/login/{email}/{password}', [AuthsController::class, 'login']);
-    Route::post('/test', [AuthsController::class, 'test']);
 
     //Route to all CRUD
     Route::apiresource('teacher', TeachersController::class);
@@ -30,7 +29,7 @@ Route::middleware(['cors'])->group(function ()
     Route::get('student/list/{grade}/{school_year}',               [ServicesController::class, 'get_student_by_grade']);
     Route::get('student/list/{grade}/{group}/{gender}/{school_year}',      [ServicesController::class, 'get_student_by_grade_and_gender']);        
     Route::post('student/list/quit',          [ServicesController::class, 'get_student_quitting']);      
-    Route::get('student/list/retaking_exam/{grade}/{school_year}/{module}', [ServicesController::class, 'get_student_retaking_exam']);        
+    Route::get('student/list-retaking-exam/{school_year}/{module}', [ServicesController::class, 'get_student_retaking_exam']);               
     Route::get('student/re-take-exam/{id}',                     [ServicesController::class, 'get_all_retake_exam']);
 
     //Route to informations about marks of student(s)
