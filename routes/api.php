@@ -30,7 +30,7 @@ Route::middleware(['cors'])->group(function ()
     Route::get('student/list/{grade}/{school_year}',               [ServicesController::class, 'get_student_by_grade']);
     Route::get('student/list/{grade}/{group}/{gender}/{school_year}',      [ServicesController::class, 'get_student_by_grade_and_gender']);        
     Route::post('student/list/quit',          [ServicesController::class, 'get_student_quitting']);      
-    Route::post('student/list/retaking_exam', [ServicesController::class, 'get_student_retaking_exam']);        
+    Route::get('student/list/retaking_exam/{grade}/{school_year}/{module}', [ServicesController::class, 'get_student_retaking_exam']);        
     Route::get('student/re-take-exam/{id}',                     [ServicesController::class, 'get_all_retake_exam']);
 
     //Route to informations about marks of student(s)
@@ -44,8 +44,8 @@ Route::middleware(['cors'])->group(function ()
 
     //Route for other informations
     Route::get('module/list/{grade}',         [MarksController::class, 'list_module_by_grade']);
-    Route::post('teacher/add/module/{id}',    [TeachersController::class, 'add_module']);
-    Route::post('teacher/detach/module/{id}', [TeachersController::class, 'detach_module']);
+    Route::post('teacher/add-module/{id}',    [TeachersController::class, 'add_module']);
+    Route::post('teacher/detach-module/{id}', [TeachersController::class, 'detach_module']);
     Route::get('download/pdf/{year}/{semester}/{id}', [DownloadsController::class, 'download_pdf_marks_students']);
     
     // protected routes

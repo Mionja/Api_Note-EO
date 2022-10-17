@@ -267,31 +267,20 @@ class ServicesController extends Controller
     /**
      * Get list of students who are retaking the exam
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $grade
+     * @param  int  $school_year
+     * @param  int  $module
      * @return \Illuminate\Http\Response
      */
-    public function get_student_retaking_exam(Request $request)
+    public function get_student_retaking_exam(string $grade, int $school_year, int $module)
     {
-        $request->validate([
-            'grade' =>'required'          ,
-            'school_year' => 'required'   ,
-            // 'group' => 'required'      ,
-        ]);
-
-        if ($request->group) 
-        {
-            $grades = Grade::all()->where('name', $request->grade)
-                                  ->where('group', $request->group)
-                                  ->where('school_year', $request->school_year);    
-        }
-        else
-        {
-            $grades = Grade::all()->where('name', $request->grade)
-                                  ->where('school_year', $request->school_year);
-        }
-
-        $marks = Mark::all()->where('retake_exam', 1)->where(('created_at.year'), $request->school_year);
-
+        return $grade;
+        die();
+        $grades = Grade::all()->where('name', $grade)
+                              ->where('school_year', $school_year);
+        
+        $marks = Mark::all()->where('retake_exam', 1)->where('year', $school_year);
+        
         $students = [];
         foreach ($grades as $grade) 
         {
@@ -300,7 +289,7 @@ class ServicesController extends Controller
                 if ($mark->student_id == $grade->student_id) 
                 {
                     $students[] = [
-                        'student_id'=> $grade->student   ,
+                        'student'=> $grade->student          ,
                         'mark'=> ['score'=>$mark->score      , 
                                   'semester'=>$mark->semester, 
                                   'module'=>$mark->module
