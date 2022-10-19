@@ -29,6 +29,6 @@ class Retake_exam extends Mailable
      */
     public function build()
     {
-        return $this->subject('Test Mail from Mionja')->view('TestMail');
+        return $this->subject($this->details['subject'] )->view('TestMail');
     }
 }

@@ -170,9 +170,9 @@ class ServicesController extends Controller
      */
     public function get_student_by_grade(string $grade, int $school_year)
     {
-            $students = Grade::all()
-                                ->where('name', $grade)
-                                ->where('school_year', $school_year);
+        $students = Grade::all()
+                            ->where('name', $grade)
+                            ->where('school_year', $school_year);
         
         $list_student = [];
         foreach ($students as $student) {
@@ -267,13 +267,13 @@ class ServicesController extends Controller
     /**
      * Get list of students who are retaking the exam
      *
-     * @param  int  $school_year
      * @param  int  $module
      * @return \Illuminate\Http\Response
      */
-    public function get_student_retaking_exam(int $school_year, int $module)
+    public function get_student_retaking_exam(int $module)
     {
-        $marks = Mark::all()->where('retake_exam', 1)->where('year', $school_year)->where('module_id', $module);
+        $marks = Mark::all()->where('retake_exam', 1)
+                            ->where('module_id', $module);
         $student = [];
         foreach ($marks as $mark) {
             $s=$mark->students;

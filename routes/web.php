@@ -18,5 +18,4 @@ use App\Http\Controllers\MarksController;
 Route::get('/', function(){
     return 'Hello World';
 });
-
-Route::get('/send-email', [MailController::class, 'sendEmail']);
+// Route::get('/send-email', [MailController::class, 'sendEmail']);
