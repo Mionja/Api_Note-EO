@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MailController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MarksController;
 
@@ -17,3 +18,5 @@ use App\Http\Controllers\MarksController;
 Route::get('/', function(){
     return 'Hello World';
 });
+
+Route::get('/send-email', [MailController::class, 'sendEmail']);
