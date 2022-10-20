@@ -37,10 +37,14 @@ Route::middleware(['cors'])->group(function ()
     Route::post('mark',                                         [MarksController::class, 'store']);
     Route::get('student/all-marks/{year}/{id}',                     [MarksController::class, 'get_all_marks_by_year']);
     Route::get('student/average_point/{year}/{id}',     [MarksController::class, 'get_average_point_of_student_by_grade']); 
-    Route::get('student/average-point/{grade}/{year}',          [MarksController::class, 'get_average_point_of_all_students_by_grade']);     
+    Route::get('student/average-point/{grade}/{year}',          [MarksController::class, 'get_average_point_of_all_students_by_grade']);
     Route::get('student/general/average_point/{grade}/{year}',          [MarksController::class, 'get_general_average_point_of_all_students_by_grade']);     
     Route::get('student/general-average-point/{grade}',          [MarksController::class, 'get_general_average_point']);     
     Route::get('student/average_point/{gender}/{grade}/{year}', [MarksController::class, 'get_average_point_of_students_by_gender']);     
+
+    Route::get('student/data/graph-specific/{grade}/{year}',          [MarksController::class, 'get_data_graph_specific']);     
+    Route::get('student/data/graph-general/{grade}',          [MarksController::class, 'get_data_graph_general']);     
+
 
     //Autres
     Route::get('module/list/{grade}',         [MarksController::class, 'list_module_by_grade']);

@@ -227,7 +227,7 @@ class MarksController extends Controller
 
 
    /**
-     * Get the general average point of all students in a certain grade of a certain year
+     * Get the GENERAL average point of all students in a certain grade of a certain year
      * 
      * @param  String  $grade
      * @param  int  $year
@@ -242,22 +242,15 @@ class MarksController extends Controller
         {
             $number_students++;
            
-            $sum_ap_all_students += $student['data']['average_point'];
+            $sum_ap_all_students += $student['data']['average_point']['data'];
         }
+    
+        $average_point = $sum_ap_all_students / $number_students;    
+        return  [
+            'moyenne'=>$average_point,
+            'nombre_etudiant'=>$number_students,
+            ]  ;
 
-        if ($number_students) {
-            $average_point = $sum_ap_all_students / $number_students;    
-            return  [
-                'status'=>200,
-                'moyenne'=>$average_point,
-                'nombre_etudiant'=>$number_students,
-                ]  ;
-        }
-        
-        else{
-            return  [
-                'status'=>400];
-        }
     }
 
     //list of all general average points in a year
@@ -309,4 +302,72 @@ class MarksController extends Controller
         $average_point = $sum_ap_all_students / $number_students;
         return  $average_point;
     }
+
+    //Mandefa donnée ho affichena any am le graphe anaky 4
+    public function get_data_graph_specific(String $grade, int $year)
+    {
+        $test = $this->get_average_point_of_all_students_by_grade($grade, $year);
+        $participating = 0;
+        $not_participating = 0;
+        $ap = 0; //nombre de personne nahazo moyenne
+        $nap = 0; //nombre de personne tsy nahazo moyenne
+        $girl_Gt10 = 0; //Nombre de fille ayant une note plus de 10
+        $boy_Gt10 = 0; //Nombre de garçon ayant une note plus de 10
+        $girl_Lt10 = 0; //Nombre de fille ayant une note moins de 10
+        $boy_Lt10 = 0; //Nombre de garçon ayant une note moins de 10
+
+        foreach ($test as $d) {
+            if ($d['data']['average_point']['data'] == 0) {         //Tsy nanao examen
+                $not_participating++;
+            }
+            else if ($d['data']['average_point']['data'] >= 10) {   //Nahazo moyenne
+                $participating++;
+                $ap++;
+                if ($d['data']['student']['gender'] == 'F') 
+                {
+                    $girl_Gt10++;
+                }
+                else if ($d['data']['student']['gender'] == 'M') 
+                {
+                    $boy_Gt10++;
+                }
+            }
+            else if ($d['data']['average_point']['data'] < 10) { // TSY Nahazo moyenne
+                $participating++;
+                $nap++;
+                if ($d['data']['student']['gender'] == 'F') 
+                {
+                    $girl_Lt10++;
+                }
+                else if ($d['data']['student']['gender'] == 'M') 
+                {
+                    $boy_Lt10++;
+                }
+            }
+        }
+        return [
+            'participating'=> $participating,
+            'not_participating'=> $not_participating,
+            'ap'=> $ap,
+            'nap'=> $nap,
+            'girl_Gt10'=> $girl_Gt10,
+            'boy_Gt10'=> $boy_Gt10,
+            'girl_Lt10'=> $girl_Lt10,
+            'boy_Lt10'=> $boy_Lt10,
+        ];
+    }
+
+    //Donnée ho affichena am le graphe any amle général kokoa
+    public function get_data_graph_general(String $grade)
+    {
+        $res = [];
+        $year = [ 2022]; //Mbola ampiana fa 2022 ftsn aloha zao no misy
+        foreach ($year as $y) {
+            $res[] = [
+                'LX'.$y =>$this->get_general_average_point_of_all_students_by_grade($grade, $y)
+            ];
+        }
+        return $res;
+    }
+
 }

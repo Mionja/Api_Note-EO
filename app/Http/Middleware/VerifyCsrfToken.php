@@ -25,5 +25,7 @@ class VerifyCsrfToken extends Middleware
         'api/mark',
         'api/teacher/add/module/{id}',
         'api/teacher/detach/module/{id}',
+        'api/student/data/graph-specific/{grade}/{year}',
+        'api/student/data/graph-general/{grade}'
     ];
 }
