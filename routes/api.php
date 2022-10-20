@@ -49,7 +49,7 @@ Route::middleware(['cors'])->group(function ()
     Route::get('download/pdf/{year}/{semester}/{id}', [DownloadsController::class, 'download_pdf_marks_students']);
     
     //Mandefa notification manao rattrapage
-    Route::get('/send-email', [MailController::class, 'sendEmail']);
+    Route::post('/send-email', [MailController::class, 'sendEmail']);
 
     // protected routes
     Route::group(['middleware'=> 'auth:sanctum'],

@@ -10,26 +10,26 @@ use Illuminate\Support\Facades\Mail;
 
 class MailController extends Controller
 {
-    public function sendEmail()
+    public function sendEmail(Request $request)
     {
-        $module = Module::all()->where('code', 'INFO_210')->first(); //Soloina request
+        $details = $request->validate([
+            'module' =>'required'            ,
+            'body'=>'required'
+        ]);
+        $module = Module::where('id', $request->module)->first();
+        $details['subject'] = 'Rattrapage pour le module '.$module['code'];
+        $details['title'] = 'Rattrapage pour le module '.$module['code'];
+        // return $details;
         $marks = Mark::all()
-                        ->where('retake_exam', 1)
-                        ->where('module_id', $module['id']);
+                        ->where('retake_exam', 1)           
+                        ->where('module_id', $request->module) ;
 
         $list_student = [];
         foreach ($marks as $mark) {
-            $list_student []= [
+            $list_student[] = [
                 $mark->students->email
             ];
         }
-
-        $m = 'INFO 210';
-        $details = [ //Soloina request 
-            'subject'=> 'Rattrapage '.$m.'',
-            'title'=> 'Ceci est une alerte de rattrapage',
-            'body'=> 'Manao rattrapage ianao am module '.$m.''
-        ];
         
         foreach ($list_student as $email) {
             Mail::to($email)->send(new Retake_exam($details));
