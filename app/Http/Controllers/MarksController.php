@@ -415,6 +415,58 @@ class MarksController extends Controller
         return $s;
     }
 
+      /**
+     * Get the average point of all students in a certain grade of a certain year
+     * 
+     * @param  String  $grade
+     * @param  int  $year
+     * @param  int  $semester
+     * @return \Illuminate\Http\Response
+    */
+    public function get_average_point_of_all_students_by_semester(String $grade, int $year, int $semester)
+    {
+        $students = Grade::all()
+                        ->where('name', $grade)
+                        ->where('school_year', $year)
+                        ->where('quit', 0);
+    
+        $s = [];
+        foreach ($students as $student) 
+        {
+            $retake_module = "";
+            $average_point = $this->get_average_point_of_student_by_semester( $year,  $student->student_id, $semester);
+            if ($average_point['message'] == 'Fail') {
+                $average_point = 0;
+            }
+            $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
+            foreach ($all_marks as $mark) 
+            {
+                if ($mark['marks']['semester'] == $semester) {
+                    if (($mark['marks']['score']) < 10) {
+                        $retake_module .= $mark['marks']['module']['code'].", ";
+                    }
+                }
+                
+            }
+            if ($average_point == 0) {
+                $s = [
+                    'message'=>'Fail'
+                ];
+                return $s;
+            }
+            else{
+                $s[] = [
+                    'data'=>['student'=>$student->student, 
+                            'average_point'=>$average_point,
+                            'group'=>$student->group, 
+                            'retake_module'=>$retake_module,
+                            'message'=>'Success'] 
+                ];
+            }
+        }
+        return $s;
+    }
+
     /**
      * Get the GENERAL average point of all students in a certain grade of a certain year
      * 
