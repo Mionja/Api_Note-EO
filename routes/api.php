@@ -24,14 +24,17 @@ Route::middleware(['cors'])->group(function ()
     Route::post('student/redouble/{id}',    [ServicesController::class, 'redouble']);
     Route::post('student/finish/{id}',      [ServicesController::class, 'finish_study']);
     Route::post('student/quit/{id}',        [ServicesController::class, 'quit']);
-    Route::post('student/retake_exam/{id}', [ServicesController::class, 'retake_exam']);
 
     //Mahazo liste mpianatra spécifique 
     Route::get('student/list/{grade}/{school_year}',               [ServicesController::class, 'get_student_by_grade']);
     Route::get('student/list/{grade}/{group}/{gender}/{school_year}',      [ServicesController::class, 'get_student_by_grade_and_gender']);        
     Route::post('student/list/quit',          [ServicesController::class, 'get_student_quitting']);      
-    Route::get('student/list-retaking-exam/{module}', [ServicesController::class, 'get_student_retaking_exam']);               
+
+    //Resaka rattrapage
+    Route::post('student/retake_exam/{id}', [ServicesController::class, 'retake_exam']);
+    Route::get('student/list-retaking-exam/{module}/{year}', [ServicesController::class, 'get_student_retaking_exam']);               
     Route::get('student/re-take-exam/{id}',                     [ServicesController::class, 'get_all_retake_exam']);
+    Route::post('/send-email', [MailController::class, 'sendEmail']);//Mandefa notification manao rattrapage
 
     //Resaka noten mpianatra rehetra
     Route::post('mark',                                         [MarksController::class, 'store']);
@@ -53,9 +56,6 @@ Route::middleware(['cors'])->group(function ()
     Route::post('teacher/add-module/{id}',    [TeachersController::class, 'add_module']);
     Route::post('teacher/detach-module/{id}', [TeachersController::class, 'detach_module']);
     Route::get('download/pdf/{year}/{semester}/{id}', [DownloadsController::class, 'download_pdf_marks_students']);
-    
-    //Mandefa notification manao rattrapage
-    Route::post('/send-email', [MailController::class, 'sendEmail']);
 
     // protected routes
     Route::group(['middleware'=> 'auth:sanctum'],

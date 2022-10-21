@@ -268,15 +268,19 @@ class ServicesController extends Controller
      * Get list of students who are retaking the exam
      *
      * @param  int  $module
+     * @param  int  $year
      * @return \Illuminate\Http\Response
      */
-    public function get_student_retaking_exam(int $module)
+    public function get_student_retaking_exam(int $module, int $year)
     {
         $marks = Mark::all()->where('retake_exam', 1)
-                            ->where('module_id', $module);
+                            ->where('module_id', $module)
+                            ->where('year', $year);
         $student = [];
-        foreach ($marks as $mark) {
-            $s=$mark->students;
+        foreach ($marks as $mark) 
+        {
+            $s = $mark->students;
+            // $m = $mark->module;
             $student []= [
                 'marks'=>$mark
             ];
