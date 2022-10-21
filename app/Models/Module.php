@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Module extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'code', 'hour'];
+    protected $fillable = ['name', 'code', 'hour', 'credits', 'category', 'year'];
 
     // Relationship with marks
     public function marks() 

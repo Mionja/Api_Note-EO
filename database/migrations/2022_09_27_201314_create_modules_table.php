@@ -17,7 +17,10 @@ class CreateModulesTable extends Migration
             $table->id();
             $table->string('code');
             $table->string('name');
-            $table->string('hour');
+            $table->integer('credits');
+            $table->integer('hour');
+            $table->tinyText('category');
+            $table->integer('year');
             $table->timestamps();
         });
     }

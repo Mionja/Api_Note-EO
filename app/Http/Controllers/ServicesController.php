@@ -284,6 +284,12 @@ class ServicesController extends Controller
         return $student;
     }
 
+    /**
+     *Get list of all modules to re-take of a specified student
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function get_all_retake_exam(int $id)
     {
         $marks = Mark::all()->where('student_id', $id);

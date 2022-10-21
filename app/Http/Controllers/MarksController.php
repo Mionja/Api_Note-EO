@@ -58,7 +58,13 @@ class MarksController extends Controller
     
         }
 
-        return Mark::create([$request->all()]);
+        return Mark::create([
+            "module_id"=>$module['id']      ,
+            "student_id"=>$student['id']    ,
+            "semester"=>$request->semester  ,
+            "year"=>$request->year          ,
+            "score"=>$request->score        ,
+        ]);
 
     }
 
@@ -75,10 +81,7 @@ class MarksController extends Controller
         $all_marks = [];
         foreach ($marks as $mark) 
         {
-            $module[]=[
-                'name'=> $mark->module->name    ,
-                'code'=> $mark->module->code    ,
-            ];
+            $module=$mark->module;
 
             $year_mark = $mark->year;
             if ($year_mark == $year) 
@@ -88,22 +91,22 @@ class MarksController extends Controller
                 ];
             }
         }
-        
         return $all_marks;
-        
     }
 
-  /**
+    /**
      *Get all list of modules of a specified grade
      *
      * @param  string  $grade
+     * @param  int  $year
      * @return \Illuminate\Http\Response
      */
-    public function list_module_by_grade(String $grade)
+    public function list_module_by_grade(String $grade, int  $year)
     {
         $list_module = [];
-        $modules = Module::all();
-        $module_number = 0;
+        $modules = Module::all()->where('year', $year);
+        $sum_credits = 0;
+        $number_module = 0;
         foreach ($modules as $module)
         {
             $teacher = $module->teachers;
@@ -115,7 +118,8 @@ class MarksController extends Controller
                         [
                             'module' => $module,
                         ];
-                        $module_number++;           
+                        $sum_credits += $module->credits;    
+                        $number_module++;       
                     }
                     break;
                 case 'L2':
@@ -124,7 +128,8 @@ class MarksController extends Controller
                         [
                             'module' => $module
                         ];  
-                        $module_number++;                    
+                        $sum_credits += $module->credits;  
+                        $number_module++; 
                     }
                     break;
                 case 'L3':
@@ -133,7 +138,8 @@ class MarksController extends Controller
                         [
                             'module' => $module
                         ];  
-                        $module_number++;                    
+                        $sum_credits += $module->credits;  
+                        $number_module++; 
                     }
                     break;
                 case 'M1':
@@ -142,7 +148,8 @@ class MarksController extends Controller
                         [
                             'module' => $module
                         ];  
-                        $module_number++;                    
+                        $sum_credits += $module->credits;  
+                        $number_module++; 
                     }
                     break;
                 case 'M2':
@@ -151,13 +158,144 @@ class MarksController extends Controller
                         [
                             'module' => $module
                         ];         
-                        $module_number++;             
+                        $sum_credits += $module->credits;  
+                        $number_module++; 
                     }
                     break;
             }
         }
         
-        return ['list_module'=>$list_module, 'module_number'=>$module_number];
+        return ['list_module'=>$list_module, 
+                'sum_credits'=>$sum_credits, 
+                'number_module'=>$number_module];
+    }
+
+    /**
+     *Get all list of modules of a specified grade and semester
+     *
+     * @param  string  $grade
+     * @param  int  $year
+     * @param  int  $semester 
+     * @return \Illuminate\Http\Response
+     */
+    public function list_module_by_semester(String $grade, int  $year, int $semester)
+    {
+        $list_module = [];
+        $modules = Module::all()->where('year', $year);
+        $sum_credits = 0;
+        $number_module = 0;
+
+        foreach ($modules as $module)
+        {
+            $teacher = $module->teachers;
+            $code = explode('_', $module->code)[1];
+            switch ($grade) {
+                case 'L1':
+                    if ($code < 300) {
+                        if ($code < 200 & $semester == 1) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                            $sum_credits += $module->credits; 
+                            $number_module++;     
+                        }
+                        else if ($code >= 200 & $semester == 2) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                            $sum_credits += $module->credits;  
+                            $number_module++;    
+                        }           
+                    }
+                    break;
+                case 'L2':
+                    if ($code < 500 && $code >= 300) {
+                        if ($code < 400 & $semester == 1) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                             $sum_credits += $module->credits;  
+                             $number_module++;    
+                        }
+                        else if ($code >= 400 & $semester == 2) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                             $sum_credits += $module->credits;   
+                             $number_module++;   
+                        }
+                    }
+                    break;
+                case 'L3':
+                    if ($code < 700 && $code >= 500) {
+                        if ($code < 600 & $semester == 1) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                             $sum_credits += $module->credits;   
+                             $number_module++;   
+                        }
+                        else if ($code >= 600 & $semester == 2) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                             $sum_credits += $module->credits;  
+                             $number_module++;    
+                        }
+                    }
+                    break;
+                case 'M1':
+                    if ($code < 900 && $code >= 700) {
+                        if ($code < 800 & $semester == 1) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                             $sum_credits += $module->credits;   
+                             $number_module++;   
+                        }
+                        else if ($code >= 800 & $semester == 2) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                             $sum_credits += $module->credits;   
+                             $number_module++;   
+                        }
+                    }
+                    break;
+                case 'M2':
+                    if ($code < 1100 && $code >= 900) {
+                        if ($code < 1000 & $semester == 1) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                             $sum_credits += $module->credits;   
+                             $number_module++;   
+                        }
+                        else if ($code >= 1000 & $semester == 2) {
+                            $list_module[] = 
+                            [
+                                'module' => $module,
+                            ];
+                             $sum_credits += $module->credits;   
+                             $number_module++;   
+                        }                 
+                    }
+                    break;
+            }
+        }
+        
+        return ['list_module'=>$list_module,
+                'sum_credits'=>$sum_credits,
+                'number_module'=>$number_module];
     }
 
     /**
@@ -170,13 +308,16 @@ class MarksController extends Controller
     public function get_average_point_of_student_by_grade( int $year, int $id)
     {
        $grade = Grade::all()->where('student_id', $id)->where('school_year', $year)->first();
+       
        $all_marks = $this->get_all_marks_by_year($year, $id);
-       $module_number = $this->list_module_by_grade($grade->name)['module_number'];
-        $sum_score = 0;
-        $i = 0;
+       $module_number = $this->list_module_by_grade($grade->name, $year)['number_module'];
+       $sum_credits = $this->list_module_by_grade($grade->name, $year)['sum_credits'];
+       $sum_score = 0;
+       
+       $i = 0;
         foreach ($all_marks as $mark) 
         {
-            $sum_score += $mark['marks']['score'];
+            $sum_score += ( $mark['marks']['score'] * $mark['marks']['module']['credits'] );
             $i++;
         }
 
@@ -184,80 +325,125 @@ class MarksController extends Controller
         {
             return ['message'=> "Fail"];
         }
-        $average_point = $sum_score / $module_number;
+        $average_point = $sum_score / $sum_credits;
+        return [
+            'message' => 'success'    ,
+            'data'    =>$average_point
+        ];
+    }
+
+    /**
+     * Get the average point of a student in a certain grade of a certain year and semester
+     * 
+     * @param  int  $year
+     * @param  int  $id
+     * @param  int  $semenster 
+     * @return \Illuminate\Http\Response
+     */
+    public function get_average_point_of_student_by_semester( int $year, int $id, int $semester)
+    {
+       $grade = Grade::all()->where('student_id', $id)->where('school_year', $year)->first();
+       $all_marks = $this->get_all_marks_by_year($year, $id);
+       $module_number = $this->list_module_by_semester($grade->name, $year, $semester)['number_module'];
+       $sum_credits = $this->list_module_by_semester($grade->name, $year, $semester)['sum_credits'];
+       
+        $sum_score = 0;
+        $i = 0;
+
+        foreach ($all_marks as $mark) 
+        {
+            if ($mark['marks']['semester'] == $semester) {
+                $sum_score += ( $mark['marks']['score'] * $mark['marks']['module']['credits'] );
+                $i++;
+            }
+        }
+
+        if ($i != $module_number || $sum_score==0) 
+        {
+            return ['message'=> "Fail"];
+        }
+        $average_point = $sum_score / $sum_credits;
         return [
             'message'=> 'success',
             'data'=>$average_point
         ];
     }
 
- /**
+    /**
      * Get the average point of all students in a certain grade of a certain year
      * 
      * @param  String  $grade
      * @param  int  $year
      * @return \Illuminate\Http\Response
-     */
+    */
     public function get_average_point_of_all_students_by_grade(String $grade, int $year)
     {
-        
         $students = Grade::all()->where('name', $grade)->where('school_year', $year)->where('quit', 0);
         $s = [];
         $retake_module = "";
         foreach ($students as $student) 
         {
             $average_point = $this->get_average_point_of_student_by_grade( $year,  $student->student_id);
+            if ($average_point['message'] == 'Fail') {
+                $average_point = 0;
+            }
             $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
             foreach ($all_marks as $mark) 
             {
                 if (($mark['marks']['score']) < 10) {
-                    $retake_module .= ", ". $mark['marks']['module']['code'];
+                    $retake_module .= $mark['marks']['module']['code'].", ";
                 }
             }
-            $s[] = [
-                'data'=>['student'=>$student->student, 
-                        'average_point'=>$average_point,
-                        'group'=>$student->group, 
-                        'retake_module'=>$retake_module] 
-            ];
+            if ($average_point == 0) {
+                $s = [
+                    'message'=>'Fail'
+                ];
+                return $s;
+            }
+            else{
+                $s[] = [
+                    'data'=>['student'=>$student->student, 
+                            'average_point'=>$average_point,
+                            'group'=>$student->group, 
+                            'retake_module'=>$retake_module,
+                            'message'=>'Success'] 
+                ];
+            }
+            return $s;
         }
-
-        return $s;
     }
 
-
-   /**
+    /**
      * Get the GENERAL average point of all students in a certain grade of a certain year
      * 
      * @param  String  $grade
      * @param  int  $year
      * @return \Illuminate\Http\Response
-     */
+    */
     public function get_general_average_point_of_all_students_by_grade(String $grade, int $year)
     {
         $students = $this->get_average_point_of_all_students_by_grade($grade, $year);
+        
         $number_students = 0;
         $sum_ap_all_students = 0;
         foreach ($students as $student) 
         {
+            if ($student['data']['message'] == 'Fail') {
+                return [
+                    'message'=> 'Fail'
+                ];
+            }
+            
             $number_students++;
-           
             $sum_ap_all_students += $student['data']['average_point']['data'];
         }
-    
+
         $average_point = $sum_ap_all_students / $number_students;    
         return  [
             'moyenne'=>$average_point,
             'nombre_etudiant'=>$number_students,
+            'message'=>'Success'
             ]  ;
-
-    }
-
-    //list of all general average points in a year
-    public function get_general_average_point(String $grade)
-    {
-        $g = Grade::all()->where('name', $grade);
-        return $g;
 
     }
 
@@ -303,7 +489,13 @@ class MarksController extends Controller
         return  $average_point;
     }
 
-    //Mandefa donnée ho affichena any am le graphe anaky 4
+    /**
+    * Mandefa donnée ho affichena any am le graphe anaky 4
+    * 
+    * @param  String  $grade
+    * @param  int  $year
+    * @return \Illuminate\Http\Response
+    */
     public function get_data_graph_specific(String $grade, int $year)
     {
         $test = $this->get_average_point_of_all_students_by_grade($grade, $year);
@@ -357,7 +549,12 @@ class MarksController extends Controller
         ];
     }
 
-    //Donnée ho affichena am le graphe any amle général kokoa
+    /**
+    * Donnée ho affichena am le graphe any amle général kokoa
+    * 
+    * @param  String  $grade
+    * @return \Illuminate\Http\Response
+    */
     public function get_data_graph_general(String $grade)
     {
         $res = [];

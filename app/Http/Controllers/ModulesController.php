@@ -38,7 +38,10 @@ class ModulesController extends Controller
         $request->validate([
             'name' =>'required'           ,
             'code' => 'required|min:8|unique:modules,code'    ,
-            'hour'=>'required'            ,
+            'hour'=>'required'                  ,
+            'year'=>'required'                  ,
+            'credits'=>'required'               ,
+            'category'=>'required'              ,
         ]
         );
         if ($request->teacher_id) 
@@ -86,6 +89,15 @@ class ModulesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' =>'required'           ,
+            'code' => 'required|min:8|unique:modules,code'    ,
+            'hour'=>'required'                  ,
+            'year'=>'required'                  ,
+            'credits'=>'required'               ,
+            'category'=>'required'              ,
+        ]
+        );
         $module = Module::find($id);	
         if ($module->update($request->all())) {
             return [

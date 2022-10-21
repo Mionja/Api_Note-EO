@@ -24,7 +24,10 @@ class ModuleFactory extends Factory
         return [
             'name'=>$this->faker->name()                 ,
             'code'=>$this->faker->randomElement(['INFO_120','INFO_210','INFO_300','INFO_150','MATH_120','MATH_220','ENTR_120','ENTR_220'])          ,
-            'hour'=>$this->faker->randomElement([8, 10, 24])    
+            'hour'=>$this->faker->randomElement([8, 10, 24]) ,   
+            'credits'=>$this->faker->randomElement([2, 1.5, 4])   ,
+            'year'=>$this->faker->randomElement([2020, 2021, 2022])   ,
+            'category'=>$this->faker->randomElement(['Informatique', 'Entreprenariat','Langue'])    
         ];
     }
 }
