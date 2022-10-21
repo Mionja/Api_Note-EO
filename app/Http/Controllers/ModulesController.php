@@ -36,8 +36,8 @@ class ModulesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' =>'required'           ,
-            'code' => 'required|min:8|unique:modules,code'    ,
+            'name' =>'required'                 ,
+            'code' => 'required|min:8'          ,
             'hour'=>'required'                  ,
             'year'=>'required'                  ,
             'credits'=>'required'               ,
@@ -118,5 +118,28 @@ class ModulesController extends Controller
         return Module::destroy($id);   
     }
 
+        /**
+     * Copie de tous les modules d'une année vers une autre
+     * 
+     * @param int $from_year
+     * @param int $to_year
+     * @return \Illuminate\Http\Response
+     */
+    public function copy_modules_from_year(int $from_year, int $to_year)
+    {
+        $modules = Module::all()->where('year', $from_year);
+        foreach ($modules as $module) {
+            Module::create([
+                "code"=>$module['code']    ,
+                "name"=>$module['name']    ,
+                "credits"=>$module['credits']    ,
+                "hour"=>$module['hour']    ,
+                "category"=>$module['category']    ,
+                "year"=>$to_year    ,
+            ]);
+    
+        }
+        return ['message'=>'Success'];
+    }
   
 }

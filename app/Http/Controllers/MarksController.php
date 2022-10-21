@@ -621,4 +621,30 @@ class MarksController extends Controller
         return $res;
     }
 
+    /**
+     * Copie de tous les modules d'une année vers une autre
+     * 
+     * @param String $grade
+     * @param int $from_year
+     * @param int $to_year
+     * @return \Illuminate\Http\Response
+     */
+    public function copy_modules_from_year(String $grade, int $from_year, int $to_year)
+    {
+        $modules = $this->list_module_by_grade($grade, $from_year)['list_module'];
+        return $modules;
+        foreach ($modules as $module) {
+            Module::create([
+                "code"=>$module['module']['code']    ,
+                "name"=>$module['module']['name']    ,
+                "credits"=>$module['module']['credits']    ,
+                "hour"=>$module['module']['hour']    ,
+                "category"=>$module['module']['category']    ,
+                "year"=>$to_year    ,
+            ]);
+    
+        }
+        return ['message'=>'Success'];
+    }
+
 }

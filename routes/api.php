@@ -45,7 +45,9 @@ Route::middleware(['cors'])->group(function ()
     Route::get('student/data/graph-specific/{grade}/{year}',          [MarksController::class, 'get_data_graph_specific']);     
     Route::get('student/data/graph-general/{grade}',          [MarksController::class, 'get_data_graph_general']);     
 
-    //Autres
+    //Autres(modules, teacher, downloads)
+    Route::get('copy-all-modules/{from_year}/{to_year}',         [ModulesController::class, 'copy_modules_from_year']);
+    Route::get('copy-modules/{grade}/{from_year}/{to_year}',         [MarksController::class, 'copy_modules_from_year']);
     Route::get('module/list/{grade}/{year}',         [MarksController::class, 'list_module_by_grade']);
     Route::get('module/list-semester/{grade}/{year}/{semester}',         [MarksController::class, 'list_module_by_semester']);
     Route::post('teacher/add-module/{id}',    [TeachersController::class, 'add_module']);
