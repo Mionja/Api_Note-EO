@@ -380,40 +380,50 @@ class MarksController extends Controller
     public function get_average_point_of_all_students_by_grade(String $grade, int $year)
     {
         $students = Grade::all()->where('name', $grade)->where('school_year', $year)->where('quit', 0);
-    
+        $number = 0;
         $s = [];
         foreach ($students as $student) 
         {
             $retake_module = "";
+            $number++;
             $average_point = $this->get_average_point_of_student_by_grade( $year,  $student->student_id);
-            if ($average_point['message'] == 'Fail') {
-                return [
+            if ($average_point['message'] == 'Fail') 
+            { 
+                $s [] = [
                     'data'=>['student'=>'', 
-                            'average_point'=>0,
+                            'average_point'=>[
+                                'message'=>'Fail',
+                                'data'=>0,
+                            ],
                             'group'=>'', 
-                            'retake_module'=>0,
-                            'message'=>'Fail'
+                            'retake_module'=>'',
+                            'message'=>'Fail',
+                            'number_student'=>$number,
                             ] 
                 ];
-                die();
-            }
-            $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
-            foreach ($all_marks as $mark) 
-            {
-                if (($mark['marks']['score']) < 10) {
-                    $retake_module .= $mark['marks']['module']['code'].", ";
-                }
             }
 
-            
-            $s[] = [
-                'data'=>['student'=>$student->student, 
-                        'average_point'=>$average_point,
-                        'group'=>$student->group, 
-                        'retake_module'=>$retake_module,
-                        'message'=>'Success'] 
-            ];
-            
+            else
+            {
+                $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
+                foreach ($all_marks as $mark) 
+                {
+                    if (($mark['marks']['score']) < 10) {
+                        $retake_module .= $mark['marks']['module']['code'].", ";
+                    }
+                }
+
+                
+                $s[] = [
+                    'data'=>['student'=>$student->student,
+                            'number_student'=>$number, 
+                            'average_point'=>$average_point,
+                            'group'=>$student->group, 
+                            'retake_module'=>$retake_module,
+                            'message'=>'Success'] 
+                ];
+                
+            }
         }
         return $s;
     }
@@ -480,21 +490,31 @@ class MarksController extends Controller
     public function get_general_average_point_of_all_students_by_grade(String $grade, int $year)
     {
         $students = $this->get_average_point_of_all_students_by_grade($grade, $year);
-        return $students;
+        $t = 0;
         $number_students = 0;
         $sum_ap_all_students = 0;
         foreach ($students as $student) 
         {
+            // return $student['data']['message'];
+            // if ($student['data']['message'] == 'Fail') {
+            //     return [
+            //         'message'=> 'Fail'
+            //     ];
+            // }
             if ($student['data']['message'] == 'Fail') {
-                return [
-                    'message'=> 'Fail'
-                ];
+               $t = 1;
             }
             
-            $number_students++;
+            $number_students = $student['data']['number_student'];
             $sum_ap_all_students += $student['data']['average_point']['data'];
         }
 
+        if ($t == 1) {
+            return [
+                        'nombre_etudiant'=>$number_students,
+                        'message'=> 'Fail',
+                    ];
+        }
         $average_point = $sum_ap_all_students / $number_students;    
         return  [
             'moyenne'=>$average_point,
@@ -616,11 +636,24 @@ class MarksController extends Controller
     {
         $res = [];
         $year = [ 2022]; //Mbola ampiana fa 2022 ftsn aloha zao no misy
-        return $this->get_general_average_point_of_all_students_by_grade($grade, 2022)['message'];
+
         foreach ($year as $y) {
-            $res[] = [
-                'LX'.$y =>$this->get_general_average_point_of_all_students_by_grade($grade, $y)
-            ];
+            $ap =$this->get_general_average_point_of_all_students_by_grade($grade, $y) ;
+            
+            if ($ap['message'] == 'Fail') {
+                $res[] = [
+                    'LX'.$y => [
+                        'moyenne'=> 0   ,
+                        'nombre_etudiant'=>$ap['nombre_etudiant'],
+                        'message'=>'Fail'
+                        ] 
+                ];
+            }
+            else{
+                $res[] = [
+                    'LX'.$y =>$ap
+                ];
+            }
         }
         return $res;
     }
