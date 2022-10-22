@@ -387,7 +387,15 @@ class MarksController extends Controller
             $retake_module = "";
             $average_point = $this->get_average_point_of_student_by_grade( $year,  $student->student_id);
             if ($average_point['message'] == 'Fail') {
-                $average_point = 0;
+                return [
+                    'data'=>['student'=>'', 
+                            'average_point'=>0,
+                            'group'=>'', 
+                            'retake_module'=>0,
+                            'message'=>'Fail'
+                            ] 
+                ];
+                die();
             }
             $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
             foreach ($all_marks as $mark) 
@@ -396,21 +404,16 @@ class MarksController extends Controller
                     $retake_module .= $mark['marks']['module']['code'].", ";
                 }
             }
-            if ($average_point == 0) {
-                $s = [
-                    'message'=>'Fail'
-                ];
-                return $s;
-            }
-            else{
-                $s[] = [
-                    'data'=>['student'=>$student->student, 
-                            'average_point'=>$average_point,
-                            'group'=>$student->group, 
-                            'retake_module'=>$retake_module,
-                            'message'=>'Success'] 
-                ];
-            }
+
+            
+            $s[] = [
+                'data'=>['student'=>$student->student, 
+                        'average_point'=>$average_point,
+                        'group'=>$student->group, 
+                        'retake_module'=>$retake_module,
+                        'message'=>'Success'] 
+            ];
+            
         }
         return $s;
     }
@@ -477,7 +480,7 @@ class MarksController extends Controller
     public function get_general_average_point_of_all_students_by_grade(String $grade, int $year)
     {
         $students = $this->get_average_point_of_all_students_by_grade($grade, $year);
-        
+        return $students;
         $number_students = 0;
         $sum_ap_all_students = 0;
         foreach ($students as $student) 
@@ -613,6 +616,7 @@ class MarksController extends Controller
     {
         $res = [];
         $year = [ 2022]; //Mbola ampiana fa 2022 ftsn aloha zao no misy
+        return $this->get_general_average_point_of_all_students_by_grade($grade, 2022)['message'];
         foreach ($year as $y) {
             $res[] = [
                 'LX'.$y =>$this->get_general_average_point_of_all_students_by_grade($grade, $y)
@@ -632,7 +636,7 @@ class MarksController extends Controller
     public function copy_modules_from_year(String $grade, int $from_year, int $to_year)
     {
         $modules = $this->list_module_by_grade($grade, $from_year)['list_module'];
-        return $modules;
+        
         foreach ($modules as $module) {
             Module::create([
                 "code"=>$module['module']['code']    ,
