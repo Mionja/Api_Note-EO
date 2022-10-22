@@ -43,7 +43,7 @@ class MarksController extends Controller
             'semester' => 'required'   ,
             'year' => 'required'       ,
         ]);
-        $module = Module::all()->where('code', $request->module)->first();
+        $module = Module::all()->where('code', $request->module)->where('year', $request->year)->first();
         $student = Student::all()->where('email', $request->email)->first();
        
         if ($request->score < 10) {
