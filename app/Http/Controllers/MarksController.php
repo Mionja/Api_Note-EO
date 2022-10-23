@@ -322,7 +322,7 @@ class MarksController extends Controller
             $i++;
         }
 
-        if ($i != $module_number) 
+        if ($i != $module_number || $sum_score==0) 
         {
             return ['message'=> "Fail"];
         }
