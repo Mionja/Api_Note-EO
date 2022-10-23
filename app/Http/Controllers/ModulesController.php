@@ -71,9 +71,9 @@ class ModulesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Module $module)
+    public function show(int $id)
     {
-        $module = Module::find($module)->first();
+        $module = Module::all()->where('id', $id)->first();
         $teachers = $module->teachers;
         return [
             'module' => $module        ,
