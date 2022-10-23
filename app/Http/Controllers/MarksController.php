@@ -407,50 +407,67 @@ class MarksController extends Controller
     */
     public function get_average_point_of_all_students_by_grade(String $grade, int $year)
     {
-        $students = Grade::all()->where('name', $grade)->where('school_year', $year)->where('quit', 0);
         $number = 0;
         $s = [];
-        foreach ($students as $student) 
+        $students = Grade::all()->where('name', $grade)->where('school_year', $year)->where('quit', 0);
+        if (! $students->isNotEmpty()) 
         {
-            $retake_module = "";
-            $number++;
-            $average_point = $this->get_average_point_of_student_by_grade( $year,  $student->student_id);
-            if ($average_point['message'] == 'Fail') 
-            { 
-                $s [] = [
-                    'data'=>['student'=>'', 
-                            'average_point'=>[
-                                'message'=>'Fail',
-                                'data'=>0,
-                            ],
-                            'group'=>'', 
-                            'retake_module'=>'',
+            $s [] = [
+                'data'=>['student'=>'', 
+                        'average_point'=>[
                             'message'=>'Fail',
-                            'number_student'=>$number,
-                            ] 
-                ];
-            }
-
-            else
+                            'data'=>0,
+                        ],
+                        'group'=>'', 
+                        'retake_module'=>'',
+                        'message'=>'Fail',
+                        'number_student'=>$number,
+                        ] 
+            ];
+        }
+        else{
+            foreach ($students as $student) 
             {
-                $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
-                foreach ($all_marks as $mark) 
-                {
-                    if (($mark['marks']['score']) < 10) {
-                        $retake_module .= $mark['marks']['module']['code'].", ";
-                    }
+                $retake_module = "";
+                $number++;
+                $average_point = $this->get_average_point_of_student_by_grade( $year,  $student->student_id);
+                if ($average_point['message'] == 'Fail') 
+                { 
+                    $s [] = [
+                        'data'=>['student'=>'', 
+                                'average_point'=>[
+                                    'message'=>'Fail',
+                                    'data'=>0,
+                                ],
+                                'group'=>'', 
+                                'retake_module'=>'',
+                                'message'=>'Fail',
+                                'number_student'=>$number,
+                                ] 
+                    ];
                 }
 
-                
-                $s[] = [
-                    'data'=>['student'=>$student->student,
-                            'number_student'=>$number, 
-                            'average_point'=>$average_point,
-                            'group'=>$student->group, 
-                            'retake_module'=>$retake_module,
-                            'message'=>'Success'] 
-                ];
-                
+                else
+                {
+                    $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
+                    foreach ($all_marks as $mark) 
+                    {
+                        if (($mark['marks']['score']) < 10) {
+                            $retake_module .= $mark['marks']['module']['code'].", ";
+                        }
+                    }
+
+                    
+                    $s[] = [
+                        'data'=>['student'=>$student->student,
+                                'number_student'=>$number, 
+                                'average_point'=>$average_point,
+                                'group'=>$student->group, 
+                                'retake_module'=>$retake_module,
+                                'message'=>'Success'] 
+                    ];
+                    
+                }
             }
         }
         return $s;
