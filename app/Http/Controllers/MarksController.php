@@ -96,6 +96,34 @@ class MarksController extends Controller
     }
 
     /**
+     * Get all marks of a specified student in a specified year and semester
+     * 
+     * @param  Integer $year
+     * @param  Integer $semester
+     * @param  \App\Models\Student  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function get_all_marks_by_semester(Int $year,Int $id, Int $semester)
+    {
+        $marks = Mark::all()->where('student_id', $id)->where('semester', $semester);
+        // $marks = Mark::orderBy('score', 'desc')->get();
+        $all_marks = [];
+        foreach ($marks as $mark) 
+        {
+            $module=$mark->module;
+
+            $year_mark = $mark->year;
+            if ($year_mark == $year) 
+            {
+                $all_marks []= [
+                    'marks'=> $mark
+                ];
+            }
+        }
+        return $all_marks;
+    }
+
+    /**
      *Get all list of modules of a specified grade
      *
      * @param  string  $grade

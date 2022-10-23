@@ -31,6 +31,7 @@ class VerifyCsrfToken extends Middleware
         'api/teacher/detach/module/{id}',
         'api/student/data/graph-specific/{grade}/{year}',
         'api/student/data/graph-general/{grade}',
-        'api/student/average_point_by_semester/{year}/{id}/{semester}'
+        'api/student/average_point_by_semester/{year}/{id}/{semester}',
+        'api/student/all-marks-by-semester/{year}/{id}/{semester}'
     ];
 }

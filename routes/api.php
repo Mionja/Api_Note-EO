@@ -39,6 +39,7 @@ Route::middleware(['cors'])->group(function ()
     //Resaka noten mpianatra rehetra
     Route::post('mark',                                                   [MarksController::class, 'store']);
     Route::get('student/all-marks/{year}/{id}',                           [MarksController::class, 'get_all_marks_by_year']);
+    Route::get('student/all-marks-by-semester/{year}/{id}/{semester}',                           [MarksController::class, 'get_all_marks_by_semester']);
     Route::get('student/average_point/{year}/{id}',                       [MarksController::class, 'get_average_point_of_student_by_grade']); 
     Route::get('student/average_point_by_semester/{year}/{id}/{semester}',[MarksController::class, 'get_average_point_of_student_by_semester']); 
     Route::get('student/average-point/{grade}/{year}',                    [MarksController::class, 'get_average_point_of_all_students_by_grade']);
