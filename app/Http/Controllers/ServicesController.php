@@ -20,13 +20,15 @@ class ServicesController extends Controller
      */
     public function pass(Request $request, $id)
     {
+        return 'test';
         $request->validate([
             'grade' =>'required'          ,
-            'school_year' => 'required'   ,
+            'year' => 'required'   ,
             'group' => 'required'         , //Here, you should put the new group of the student
         ]);
         if ($request->grade != 'M2') 
         {
+            $grade = '';
             $student = Student::find($id);
             switch ($request->grade) {
                 case 'L1':
@@ -42,28 +44,40 @@ class ServicesController extends Controller
                     $grade = 'M2';
                     break;
             }
-    
+            $g = Grade::create([
+                'student_id' => $id            ,
+                'name' => $grade               ,
+                'group' => $request->group               ,
+                'school_year' => $request->year +1   ,
+            ]);
             return [
                 'student' =>$student    ,
-                'passed_grade'=> Grade::create([
-                    'student_id' => $id            ,
-                    'name' => $grade               ,
-                    'group' => $request->group               ,
-                    'school_year' => $request->school_year +1   ,
-                ])
+                'passed_grade'=> $g
             ];
         }
         else 
         {
             $grade = Grade::all()->where('student_id', $id)
                                 ->where('name', $request->grade)
-                                ->where('school_year', $request->school_year)
+                                ->where('school_year', $request->year)
                                 ->first();
             return['grade'=>$grade->update([
                 'end' => 1
             ])];     
         }
 
+    }
+
+    /**
+     * Afindra daholo ireo iray kilasy
+     * 
+     * @param  int  $grade
+     * @param  int  $year
+     * @return \Illuminate\Http\Response
+     */
+    public function passAll()
+    {
+        # code...
     }
     
     /**
