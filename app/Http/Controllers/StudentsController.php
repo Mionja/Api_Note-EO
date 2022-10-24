@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Grade;
-use App\Models\Module;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -35,6 +34,40 @@ class StudentsController extends Controller
             ];
          }
         return $data;
+    }
+
+    
+    /**
+     * Store imported students.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function importStudents(Request $request)
+    {
+        foreach ($request->all() as $data) 
+        {
+            $user = User::create([
+                'name'=> $data['name'],
+                'email'=> $data['email'],
+                'password'=> bcrypt($data['password']),
+            ]);
+
+            $student = Student::create([
+                'name'=> $data['name'], 
+                'email'=> $data['email'], 
+                'age'=> $data['age'], 
+                'gender'=> $data['gender'], 
+            ]);
+
+            $grade = Grade::create([
+                 'student_id' => $student->id           ,
+                 'name' => $data['grade']               ,
+                 'group' => $data['group']              ,
+                 'school_year' => $data['year']         
+            ]);
+        }
+        return $request->all();
     }
 
     /**

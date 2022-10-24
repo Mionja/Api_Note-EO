@@ -18,6 +18,7 @@ Route::middleware(['cors'])->group(function ()
     Route::apiresource('teacher', TeachersController::class);
     Route::apiresource('module',  ModulesController::class);
     Route::apiresource('student', StudentsController::class);
+    Route::post('import/students',  [StudentsController::class, 'importStudents']);
 
     //Services 
     Route::post('student/pass/{id}',        [ServicesController::class, 'pass']);
@@ -38,6 +39,7 @@ Route::middleware(['cors'])->group(function ()
 
     //Resaka noten mpianatra rehetra
     Route::post('mark',                                                   [MarksController::class, 'store']);
+    Route::post('import',                                                   [MarksController::class, 'importMarks']);
     Route::get('student/all-marks/{year}/{id}',                           [MarksController::class, 'get_all_marks_by_year']);
     Route::get('student/all-marks-by-semester/{year}/{id}/{semester}',    [MarksController::class, 'get_all_marks_by_semester']);
     Route::get('student/average_point/{year}/{id}',                       [MarksController::class, 'get_average_point_of_student_by_grade']); 

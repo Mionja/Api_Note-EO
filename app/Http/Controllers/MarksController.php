@@ -19,6 +19,16 @@ class MarksController extends Controller
         return view('test');
     }
 
+    public function importMarks(Request $request)
+    {
+        $test = [];
+        foreach ($request->all() as $data) {
+            $test[]=[
+                'email'=>$data['email']
+            ];
+        }
+        return $test;
+    }
      /**
      * Store the imported file 
      * 
@@ -27,15 +37,6 @@ class MarksController extends Controller
      */
     public function store(Request $request)
     {
-        // if ($request->file) {
-        //     return('file sent');
-        // }
-        // else{
-        //     return('file not sent');
-        // }
-        // Excel::import(new UsersImport, request()->file('file'));
-        // Excel::import(new TestsImport, request()->file('file'));
-
         $request->validate([
             // 'score' =>'required'    , 
             'module' => 'required'     ,
