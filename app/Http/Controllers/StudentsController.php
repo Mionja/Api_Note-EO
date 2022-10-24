@@ -35,7 +35,6 @@ class StudentsController extends Controller
          }
         return $data;
     }
-
     
     /**
      * Store imported students.
