@@ -357,7 +357,7 @@ class MarksController extends Controller
         $average_point = $sum_score / $sum_credits;
         return [
             'message' => 'success'    ,
-            'data'    =>$average_point
+            'data'    =>round($average_point, 2)
         ];
     }
 
@@ -473,7 +473,7 @@ class MarksController extends Controller
         return $s;
     }
 
-      /**
+    /**
      * Get the average point of all students in a certain grade of a certain year
      * 
      * @param  String  $grade
