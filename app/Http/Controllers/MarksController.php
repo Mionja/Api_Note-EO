@@ -23,9 +23,36 @@ class MarksController extends Controller
     {
         $test = [];
         foreach ($request->all() as $data) {
+            $module = Module::all()->where('code', $data['module'])->where('year', $data['year'])->first();
+            $student = Student::all()->where('email', $data['email'])->first();
             $test[]=[
-                'email'=>$data['email']
+                'student_id'=>$student->id      ,
+                'module_id'=>$module->id        ,
+                'semester'=>$data['semester']   ,
+                'year'=>$data['year']           ,
+                'score'=>$data['score']         ,
             ];
+
+            if ($data['score'] < 10) 
+            {
+                Mark::create([
+                "module_id"=>$module->id       ,
+                "student_id"=>$student->id     ,
+                "semester"=>$data['semester']  ,
+                "year"=>$data['year']          ,
+                "score"=>$data['score']        ,
+                "retake_exam"=>1               ,
+                ]);
+            } 
+                                              
+            Mark::create([
+                "module_id"=>$module->id        ,
+                "student_id"=>$student->id      ,
+                "semester"=>$data['semester']   ,
+                "year"=>$data['year']           ,
+                "score"=>$data['score']         ,
+            ]);
+    
         }
         return $test;
     }
