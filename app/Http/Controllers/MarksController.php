@@ -422,7 +422,7 @@ class MarksController extends Controller
         $average_point = $sum_score / $sum_credits;
         return [
             'message'=> 'success',
-            'data'=>$average_point
+            'data'=>round($average_point, 2)
         ];
     }
 
@@ -438,7 +438,7 @@ class MarksController extends Controller
         $number = 0;
         $s = [];
         $students = Grade::all()->where('name', $grade)->where('school_year', $year)->where('quit', 0);
-        if (! $students->isNotEmpty()) 
+        if (! $students->isNotEmpty()) //Raha tsy misy mpianatra mits ao amnio classe ray io
         {
             $s [] = [
                 'data'=>['student'=>'', 
@@ -511,43 +511,69 @@ class MarksController extends Controller
     */
     public function get_average_point_of_all_students_by_semester(String $grade, int $year, int $semester)
     {
-        $students = Grade::all()
-                        ->where('name', $grade)
-                        ->where('school_year', $year)
-                        ->where('quit', 0);
-    
+        $number = 0;
         $s = [];
-        foreach ($students as $student) 
+        $students = Grade::all()->where('name', $grade)->where('school_year', $year)->where('quit', 0);
+        if (! $students->isNotEmpty()) //Raha tsy misy mpianatra mits ao amnio classe ray io
         {
-            $retake_module = "";
-            $average_point = $this->get_average_point_of_student_by_semester( $year,  $student->student_id, $semester);
-            if ($average_point['message'] == 'Fail') {
-                $average_point = 0;
-            }
-            $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
-            foreach ($all_marks as $mark) 
+            $s [] = [
+                'data'=>['student'=>'', 
+                        'average_point'=>[
+                            'message'=>'Fail',
+                            'data'=>0,
+                        ],
+                        'group'=>'', 
+                        'retake_module'=>'',
+                        'message'=>'Fail',
+                        'number_student'=>$number,
+                        ] 
+            ];
+        }
+        else{
+            foreach ($students as $student) 
             {
-                if ($mark['marks']['semester'] == $semester) {
-                    if (($mark['marks']['score']) < 10) {
-                        $retake_module .= $mark['marks']['module']['code'].", ";
-                    }
+                $retake_module = "";
+                $number++;
+                $average_point = $this->get_average_point_of_student_by_semester( $year,  $student->student_id, $semester);
+                if ($average_point['message'] == 'Fail') 
+                { 
+                    $s [] = [
+                        'data'=>['student'=>'', 
+                                'average_point'=>[
+                                    'message'=>'Fail',
+                                    'data'=>0,
+                                ],
+                                'group'=>'', 
+                                'retake_module'=>'',
+                                'message'=>'Fail',
+                                'number_student'=>$number,
+                                ] 
+                    ];
                 }
-                
-            }
-            if ($average_point == 0) {
-                $s = [
-                    'message'=>'Fail'
-                ];
-                return $s;
-            }
-            else{
-                $s[] = [
-                    'data'=>['student'=>$student->student, 
-                            'average_point'=>$average_point,
-                            'group'=>$student->group, 
-                            'retake_module'=>$retake_module,
-                            'message'=>'Success'] 
-                ];
+
+                else
+                {
+                    $all_marks = $this->get_all_marks_by_year($year, $student->student_id);
+                    foreach ($all_marks as $mark) 
+                    {
+                        if ($mark['marks']['semester'] == $semester) {
+                            if (($mark['marks']['score']) < 10) {
+                                $retake_module .= $mark['marks']['module']['code'].", ";
+                            }
+                        }
+                    }
+
+                    
+                    $s[] = [
+                        'data'=>['student'=>$student->student,
+                                'number_student'=>$number, 
+                                'average_point'=>$average_point,
+                                'group'=>$student->group, 
+                                'retake_module'=>$retake_module,
+                                'message'=>'Success'] 
+                    ];
+                    
+                }
             }
         }
         return $s;

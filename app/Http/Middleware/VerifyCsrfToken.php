@@ -36,5 +36,6 @@ class VerifyCsrfToken extends Middleware
         'api/student/pass/{id}' ,
         'api/import',
         'api/import/students',
+        'api/student/average-point-semester/{grade}/{year}/{semester}'
     ];
 }
