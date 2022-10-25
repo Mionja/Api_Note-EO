@@ -21,7 +21,6 @@ class VerifyCsrfToken extends Middleware
         'api/student/redouble/{id}',
         'api/student/finish/{id}'   ,
         'api/student/quit/{id}'     ,
-        'api/student/retake_exam/{id}',
         'api/mark',
         'api/module/list/{grade}/{year}',
         'api/module/list-semester/{grade}/{year}/{semester}',
@@ -33,9 +32,10 @@ class VerifyCsrfToken extends Middleware
         'api/student/data/graph-general/{grade}',
         'api/student/average_point_by_semester/{year}/{id}/{semester}',
         'api/student/all-marks-by-semester/{year}/{id}/{semester}',
-        'api/student/pass/{id}' ,
+        '/api/student/pass/{id}' ,
         'api/import',
         'api/import/students',
-        'api/student/average-point-semester/{grade}/{year}/{semester}'
+        'api/student/average-point-semester/{grade}/{year}/{semester}',
+        'api/student/retake_exam/{id}'
     ];
 }

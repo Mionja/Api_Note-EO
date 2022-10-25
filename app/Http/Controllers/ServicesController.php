@@ -67,18 +67,6 @@ class ServicesController extends Controller
         }
 
     }
-
-    /**
-     * Afindra daholo ireo iray kilasy
-     * 
-     * @param  int  $grade
-     * @param  int  $year
-     * @return \Illuminate\Http\Response
-     */
-    public function passAll()
-    {
-        # code...
-    }
     
     /**
      * Ni-Redouble
@@ -164,8 +152,8 @@ class ServicesController extends Controller
             'semester' => 'required'      ,
             'score' => 'required'      ,
         ]);
-        $module = Module::all()->where('code', $request->module)->first();
-        $mark = Mark::all()->where('student_id', $id)->where('module_id', $module->id)->where('semester', $request->semester)->first();
+        // $module = Module::all()->where('code', $request->module)->first();
+        $mark = Mark::all()->where('student_id', $id)->where('module_id', $request->module)->where('semester', $request->semester)->first();
         if ($request->score < 10) 
         {
             return $mark->update(["score"=>$request->score,
