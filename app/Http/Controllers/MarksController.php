@@ -686,7 +686,10 @@ class MarksController extends Controller
         $boy_Lt10 = 0; //Nombre de garçon ayant une note moins de 10
 
         foreach ($test as $d) {
-            if ($d['data']['average_point']['data'] == 0) {         //Tsy nanao examen
+            if ($d['data']['message'] == 'Fail') {
+                $not_participating = 0;
+            }
+            else if ($d['data']['average_point']['data'] == 0) {         //Tsy nanao examen
                 $not_participating++;
             }
             else if ($d['data']['average_point']['data'] >= 10) {   //Nahazo moyenne
@@ -735,7 +738,7 @@ class MarksController extends Controller
     public function get_data_graph_general(String $grade)
     {
         $res = [];
-        $year = [ 2022]; //Mbola ampiana fa 2022 ftsn aloha zao no misy
+        $year = [2020,2021, 2022]; //Mbola ampiana fa 2022 ftsn aloha zao no misy
 
         foreach ($year as $y) {
             $ap =$this->get_general_average_point_of_all_students_by_grade($grade, $y) ;

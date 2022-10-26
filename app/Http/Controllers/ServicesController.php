@@ -20,7 +20,7 @@ class ServicesController extends Controller
      */
     public function pass(Request $request, $id)
     {
-        return 'test';
+        // return 'test';
         $request->validate([
             'grade' =>'required'          ,
             'year' => 'required'   ,
