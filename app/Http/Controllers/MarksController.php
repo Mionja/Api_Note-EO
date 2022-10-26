@@ -44,14 +44,15 @@ class MarksController extends Controller
                 "retake_exam"=>1               ,
                 ]);
             } 
-                                              
-            Mark::create([
-                "module_id"=>$module->id        ,
-                "student_id"=>$student->id      ,
-                "semester"=>$data['semester']   ,
-                "year"=>$data['year']           ,
-                "score"=>$data['score']         ,
-            ]);
+            else{
+                Mark::create([
+                    "module_id"=>$module->id        ,
+                    "student_id"=>$student->id      ,
+                    "semester"=>$data['semester']   ,
+                    "year"=>$data['year']           ,
+                    "score"=>$data['score']         ,
+                ]);
+            }                                
     
         }
         return $test;
