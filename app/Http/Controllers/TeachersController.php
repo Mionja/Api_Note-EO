@@ -37,7 +37,7 @@ class TeachersController extends Controller
     {
         $request->validate([
             'name' =>'required'      ,
-            'email' => 'required'    ,
+            'email' => 'required|unique:teachers,email'    ,
             'diploma'=>'required'    ,
             // 'gender'=>'required'     ,
             'module_id' => 'required'
@@ -53,13 +53,20 @@ class TeachersController extends Controller
        
         $teacher = Teacher::create($request->except('module_id'));  
         $module = Module::findOrFail($request->module_id);
-
-        if($teacher->modules()->save($module))
-        {
+        $modules = Module::all()->where('code', $module->code);
+        $s = [];
+        // return $modules;
+        foreach ($modules as $m) {
+            $s[] = [
+                $teacher->modules()->save($m)
+            ];
+        }
+        if ($s) {
             return response()->json([
                 'message' => 'success',
-            ], 200);
-        };
+            ], 200);   
+        }
+        
     }
 
     /**
