@@ -44,8 +44,20 @@ class StudentsController extends Controller
      */
     public function importStudents(Request $request)
     {
+        $test = [];
         foreach ($request->all() as $data) 
         {
+            $test[]=[
+                $data['name'],
+                $data['email'],
+                $data['age'],
+                $data['group'],
+                $data['grade'],
+                $data['gender'],
+                $data['password'],
+                $data['year'],
+                
+            ];
             $user = User::create([
                 'name'=> $data['name'],
                 'email'=> $data['email'],
@@ -66,7 +78,8 @@ class StudentsController extends Controller
                  'school_year' => $data['year']         
             ]);
         }
-        return $request->all();
+        return $test;
+        // return $request->all();
     }
 
     /**
