@@ -137,12 +137,12 @@ class StudentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Student  $student
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Student $student)
+    public function show(int $id)
     {
-        $student = Student::find($student)->first();
+        $student = Student::all()->where('id',$id)->first();  
         $module = [];
         foreach ($student->marks as $mark) {
             $module[] = [
